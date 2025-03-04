@@ -8,7 +8,7 @@ from PyQt6 import QtCore, QtGui
 
 
 class FakeDialog(QMainWindow):
-    def __init__(self):
+    def __init__(self, nice_text):
         super().__init__()
 
         self.setWindowTitle(" ")
@@ -16,7 +16,7 @@ class FakeDialog(QMainWindow):
         self.setWindowFlags(QtCore.Qt.WindowType.CustomizeWindowHint |
                             QtCore.Qt.WindowType.WindowCloseButtonHint)
 
-        self.label = QLabel("Ты самая красивая!", self)
+        self.label = QLabel(nice_text, self)
         self.label.setGeometry(20, 10, 150, 30)
 
         self.yes_btn = QPushButton("Да", self)
@@ -30,8 +30,8 @@ class FakeDialog(QMainWindow):
 
 
 class RandomButtonDialog(FakeDialog):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, nice_text):
+        super().__init__(nice_text)
 
         self.screen_width, self.screen_height = pyautogui.size()
 
@@ -64,8 +64,8 @@ class RandomButtonDialog(FakeDialog):
 
 
 class ChangingButtonDialog(FakeDialog):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, nice_text):
+        super().__init__(nice_text)
 
         def changeButtonsEvent(event, sender, parent):
             old_pos = sender.pos()
@@ -76,8 +76,8 @@ class ChangingButtonDialog(FakeDialog):
 
 
 class InactivatingButtonDialog(FakeDialog):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, nice_text):
+        super().__init__(nice_text)
 
         def inactivateButtonEvent(event, sender):
             sender.setEnabled(False)
@@ -91,8 +91,8 @@ class InactivatingButtonDialog(FakeDialog):
 
 
 class DisappearingButtonDialog(FakeDialog):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, nice_text):
+        super().__init__(nice_text)
 
         self.yes_btn.setStyleSheet("background-color: rgba(253, 253, 253, 255);")
         self.setAnimated(True)
@@ -135,8 +135,8 @@ class DisappearingButtonDialog(FakeDialog):
 
 
 class MovingToCursorDialog(FakeDialog):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, nice_text):
+        super().__init__(nice_text)
 
         self.setAnimated(True)
         self.setMouseTracking(True)
@@ -180,42 +180,50 @@ def success():
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Happy March 8th!")
-        self.setFixedSize(400, 200)
+        self.setWindowTitle("С 8 марта!")
 
-        label = QLabel("""Поздравляем с 8 марта!
-May all your dreams and aspirations come true!""")
+        layout = QVBoxLayout(self)
+        label = QLabel("""Всей группой М3135 поздравляем тебя с 8 марта!
+Пусть код пишется, а матан решается!""", self)
+        label.setStyleSheet("font-size: 18px; \nmargin: 20px")
         label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.setCentralWidget(label)
+        layout.addWidget(label)
+        pixmap = QtGui.QPixmap("icon.png")
+        pixmap = pixmap.transformed(QtGui.QTransform().scale(0.5, 0.5))
+        pic = QLabel(self)
+        pic.setPixmap(pixmap)
+        pic.setScaledContents(True)
+        layout.addWidget(pic)
+
+        layout.setSpacing(30)
+        widget = QWidget()
+        widget.setLayout(layout)
+        self.setCentralWidget(widget)
+        self.resize(400, 500)
 
 
 if __name__ == "__main__":
     # pyinstaller --onefile --noconsole 8===.py --icon=icon.png
 
     app5 = QApplication(sys.argv)
-    dlg5 = DisappearingButtonDialog()
+    dlg5 = DisappearingButtonDialog('Ты самая красивая!')
     dlg5.show()
     app5.exec()
 
     app1 = QApplication(sys.argv)
-    dlg1 = RandomButtonDialog()
+    dlg1 = RandomButtonDialog('Ты самая умная!')
     dlg1.show()
     app1.exec()
 
     app2 = QApplication(sys.argv)
-    dlg2 = ChangingButtonDialog()
+    dlg2 = ChangingButtonDialog('Ты самая добрая!')
     dlg2.show()
     app2.exec()
 
     app3 = QApplication(sys.argv)
-    dlg3 = MovingToCursorDialog()
+    dlg3 = MovingToCursorDialog('Ты самая лучшая!')
     dlg3.show()
     app3.exec()
-
-    app4 = QApplication(sys.argv)
-    dlg4 = InactivatingButtonDialog()
-    dlg4.show()
-    app4.exec()
 
     # All dialogs accepted, show main window
     app = QApplication(sys.argv)
