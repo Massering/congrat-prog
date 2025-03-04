@@ -8,10 +8,8 @@ from PyQt6 import QtCore, QtGui
 
 
 class FakeDialog(QMainWindow):
-    def __init__(self, screen):
+    def __init__(self):
         super().__init__()
-        self.screen_width = screen.size().width()
-        self.screen_height = screen.size().height()
 
         self.setWindowTitle(" ")
         self.setFixedSize(300, 100)
@@ -32,8 +30,10 @@ class FakeDialog(QMainWindow):
 
 
 class RandomButtonDialog(FakeDialog):
-    def __init__(self, screen):
-        super().__init__(screen)
+    def __init__(self):
+        super().__init__()
+
+        self.screen_width, self.screen_height = pyautogui.size()
 
         def randomMoveEvent(event, sender, parent):
             new_x = random.randint(-(parent.screen_width // 4), parent.screen_width // 4)
@@ -64,8 +64,8 @@ class RandomButtonDialog(FakeDialog):
 
 
 class ChangingButtonDialog(FakeDialog):
-    def __init__(self, screen):
-        super().__init__(screen)
+    def __init__(self):
+        super().__init__()
 
         def changeButtonsEvent(event, sender, parent):
             old_pos = sender.pos()
@@ -76,8 +76,8 @@ class ChangingButtonDialog(FakeDialog):
 
 
 class InactivatingButtonDialog(FakeDialog):
-    def __init__(self, screen):
-        super().__init__(screen)
+    def __init__(self):
+        super().__init__()
 
         def inactivateButtonEvent(event, sender):
             sender.setEnabled(False)
@@ -91,8 +91,8 @@ class InactivatingButtonDialog(FakeDialog):
 
 
 class DisappearingButtonDialog(FakeDialog):
-    def __init__(self, screen):
-        super().__init__(screen)
+    def __init__(self):
+        super().__init__()
 
         self.yes_btn.setStyleSheet("background-color: rgba(253, 253, 253, 255);")
         self.setAnimated(True)
@@ -135,8 +135,8 @@ class DisappearingButtonDialog(FakeDialog):
 
 
 class MovingToCursorDialog(FakeDialog):
-    def __init__(self, screen):
-        super().__init__(screen)
+    def __init__(self):
+        super().__init__()
 
         self.setAnimated(True)
         self.setMouseTracking(True)
@@ -190,31 +190,32 @@ May all your dreams and aspirations come true!""")
 
 
 if __name__ == "__main__":
+    # pyinstaller --onefile --noconsole 8===.py --icon=icon.png
+
+    app5 = QApplication(sys.argv)
+    dlg5 = DisappearingButtonDialog()
+    dlg5.show()
+    app5.exec()
+
     app1 = QApplication(sys.argv)
-    screen = QApplication.screens()[0]
-    dlg1 = RandomButtonDialog(screen)
+    dlg1 = RandomButtonDialog()
     dlg1.show()
     app1.exec()
 
     app2 = QApplication(sys.argv)
-    dlg2 = ChangingButtonDialog(screen)
+    dlg2 = ChangingButtonDialog()
     dlg2.show()
     app2.exec()
 
     app3 = QApplication(sys.argv)
-    dlg3 = InactivatingButtonDialog(screen)
+    dlg3 = MovingToCursorDialog()
     dlg3.show()
     app3.exec()
 
     app4 = QApplication(sys.argv)
-    dlg4 = DisappearingButtonDialog(screen)
+    dlg4 = InactivatingButtonDialog()
     dlg4.show()
     app4.exec()
-
-    app5 = QApplication(sys.argv)
-    dlg5 = MovingToCursorDialog(screen)
-    dlg5.show()
-    app5.exec()
 
     # All dialogs accepted, show main window
     app = QApplication(sys.argv)
