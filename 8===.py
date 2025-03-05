@@ -2,6 +2,7 @@ import random
 import sys
 
 import pyautogui
+from PyQt6.QtGui import QRegion
 
 from PyQt6.QtWidgets import *
 from PyQt6 import QtCore, QtGui
@@ -168,6 +169,29 @@ class MovingToCursorDialog(FakeDialog):
         super().paintEvent(a0)
 
 
+class VoidCircleDialog(FakeDialog):
+    def __init__(self, nice_text):
+        super().__init__(nice_text)
+
+    def paintEvent(self, a0):
+        self.no_btn.setEnabled(False)
+        self.no_btn.setEnabled(True)
+
+        cur_pos = self.mapFromGlobal(QtCore.QPoint(*cursor_coordinates()))
+        cur_x, cur_y = cur_pos.x(), cur_pos.y()
+
+        d = 39
+        cur_circle = QtCore.QRect(cur_x - self.no_btn.x() - d // 2, cur_y - self.no_btn.y() - d // 2, d, d)
+        btn_rect = QtCore.QRect(0, 0, self.no_btn.width(), self.no_btn.height())
+
+        btn_reg = QtGui.QRegion(btn_rect, QRegion.RegionType.Rectangle)
+        cur_reg = QtGui.QRegion(cur_circle, QtGui.QRegion.RegionType.Ellipse)
+
+        self.no_btn.setMask(btn_reg.subtracted(cur_reg))
+
+        super().paintEvent(a0)
+
+
 def cursor_coordinates():
     # todo: use pyqt functions instead of pyautogui
     return pyautogui.position()
@@ -178,13 +202,12 @@ def success():
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, nice_text):
         super().__init__()
         self.setWindowTitle("С 8 марта!")
 
         layout = QVBoxLayout(self)
-        label = QLabel("""Всей группой М3135 поздравляем тебя с 8 марта!
-Пусть код пишется, а матан решается!""", self)
+        label = QLabel(nice_text, self)
         label.setStyleSheet("font-size: 18px; \nmargin: 20px")
         label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(label)
@@ -215,6 +238,11 @@ if __name__ == "__main__":
     dlg1.show()
     app1.exec()
 
+    app4 = QApplication(sys.argv)
+    dlg4 = VoidCircleDialog('Ты самая яркая!')
+    dlg4.show()
+    app4.exec()
+
     app2 = QApplication(sys.argv)
     dlg2 = ChangingButtonDialog('Ты самая добрая!')
     dlg2.show()
@@ -227,6 +255,7 @@ if __name__ == "__main__":
 
     # All dialogs accepted, show main window
     app = QApplication(sys.argv)
-    window = MainWindow()
+    window = MainWindow("""Всей группой М3135 поздравляем тебя с 8 марта!
+Пусть код пишется, а матан решается!""")
     window.show()
     app.exec()
