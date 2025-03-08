@@ -244,7 +244,6 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     # pyinstaller --onefile --noconsole --icon=icon.png --add-data "C:/Projects/pets/8march/icon.png;." 8===.py
-    # pyinstaller --onefile --noconsole --add-data "C:/Projects/pets/8march/icon.png;." 8===.py
     app = QApplication(sys.argv)
 
     icon_pixmap = QtGui.QPixmap(resource_path("icon.png"))
@@ -253,9 +252,9 @@ if __name__ == "__main__":
     for dlg_type, text in [
         (DisappearingButtonDialog, 'Ты самая красивая!'),
         (MovingToCursorDialog, 'Ты самая умная!'),
-        (ChangingButtonDialog, 'С тобой приятнее всех вести \nбредовые переписки!'),
-        (VoidCircleDialog, 'Ты лучше всех получаешься на кружочках!'),
-        (RandomButtonDialog, 'Скинь сиськи!')
+        (ChangingButtonDialog, 'Ты самая яркая!'),
+        (VoidCircleDialog, 'Ты самая добрая!'),
+        (RandomButtonDialog, 'Ты самая лучшая!')
     ]:
         dlg = dlg_type(text)
         dlg.setWindowIcon(icon)
@@ -263,8 +262,9 @@ if __name__ == "__main__":
         app.exec()
 
     # All dialogs accepted, show main window
-    window = MainWindow("""Ниночка, поздравляю тебя с 8 марта!
-Пусть код пишется, матан решается, \nа парень будет лучше всех (кроме меня)""",
+    window = MainWindow("""Поздравляю с 8 марта!
+Пусть все мечты сбываются! 
+Будь счастлива и всегда улыбайся!""",
                         icon_pixmap)
     window.setWindowIcon(icon)
     window.show()
