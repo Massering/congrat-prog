@@ -20,7 +20,7 @@ def resource_path(relative_path) -> str:
 
 
 if __name__ == "__main__":
-    # pyinstaller --onefile --noconsole --icon=icon.png --add-data "C:/Projects/pets/8march/icon.png;." --name="c 8 марта" main.py
+    # pyinstaller --onefile --noconsole --icon=icon.png --add-data "icon.png;." --name="c 8 марта" main.py
     app = QtWidgets.QApplication(sys.argv)
 
     icon_pixmap = QtGui.QPixmap(resource_path("icon.png"))
